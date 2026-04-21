@@ -1069,7 +1069,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       markActive(idx);
       const feat = document.getElementById('feat');
-      if (feat) feat.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (feat) {
+        const headerH = document.querySelector('.gt-header')?.offsetHeight || 68;
+        const quickBar = document.querySelector('.quick-bar');
+        const quickBarH = quickBar ? quickBar.offsetHeight : 0;
+        window.scrollTo({ top: feat.offsetTop - headerH - quickBarH, behavior: 'smooth' });
+      }
     });
   });
 

@@ -404,7 +404,7 @@ ul, ol { list-style: none; }
 .feat-panel {
   display: none; max-width: 1240px; margin: 0 auto;
   padding: 60px 28px;
-  grid-template-columns: 1fr 1fr; gap: 56px;
+  grid-template-columns: 340px 1fr; gap: 56px;
   align-items: center;
   animation: featFadeIn 0.5s ease;
 }
