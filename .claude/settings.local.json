@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/yyutingliu/Downloads/GT官網改版 - 複製 - 複製 \\(3\\)/新增資料夾\" status)"
+    ]
+  }
+}

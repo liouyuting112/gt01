@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameTower 遊戲官方網站 — Layout A 保留優化架構</title>
+<meta name="description" content="gametower遊戲平台 擁有麻將、撲克、拉霸機、魚機等多款免費線上遊戲。打造信任公平開獎透明的環境。">
+<link rel="icon" href="圖片/favicon_06f79a2e.ico">
+<link rel="apple-touch-icon" href="圖片/apple-touch-icon_1d84c8c7.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ═══ Layout A — Inline Refinement v3.4 (不影響 index_B) ═══ */
+
+/* 禁用深色切換（本站只用淺色） */
+.theme-toggle { display: none !important; }
+
+/* 全域：絕不允許頁面出現橫向捲軸（任何超寬內容都被 body 吃掉） */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  width: 100%;
+}
+/* Main 區塊明確限寬避免 sub-element 外溢 */
+.gt-header,
+.carousel-section,
+.ticker-strip,
+.quick-bar,
+.featured-section,
+.games-section,
+.news-section,
+.stats-section,
+.gt-footer {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* ── 1. Header 放大：icon、logo、toggle ── */
+.gt-header { height: 76px; padding: 0 40px; }
+.gt-header .logo-link img { height: 46px; }
+.gt-nav { gap: 8px; }
+.gt-nav .nav-icon {
+  width: 68px; height: 38px;
+  border-radius: 10px;
+}
+.gt-nav .nav-icon img {
+  width: 68px; height: 76px;
+}
+.theme-toggle {
+  width: 60px; height: 32px; margin-left: 14px; border-radius: 16px;
+}
+.theme-toggle::before {
+  width: 24px; height: 24px; top: 3px; left: 3px;
+}
+[data-theme="light"] .theme-toggle::before { transform: translateX(28px); }
+.theme-toggle .icon-moon { left: 8px; }
+.theme-toggle .icon-sun { right: 8px; }
+.theme-toggle .icon-moon, .theme-toggle .icon-sun { font-size: 14px; }
+.carousel-section { margin-top: 76px; }
+
+/* ── 2. 遊戲卡片：全部等大 (4+3 居中對齊) ── */
+.games-section { padding: 72px 0; }
+.games-section .game-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.games-section .game-card {
+  width: calc((100% - 60px) / 4);
+  flex-shrink: 0;
+  display: flex; flex-direction: column;
+}
+.games-section .game-card .game-card-thumb { flex: 0 0 auto; overflow: hidden; }
+.games-section .game-card .game-card-body { flex: 1 1 auto; }
+
+/* 隱藏卡片內 logo（各款 logo 背景/配色不一，視覺容易不乾淨；遊戲名稱已足夠辨識） */
+.games-section .game-card-logo { display: none; }
+
+/* 下載按鈕微放大 */
+.games-section .game-card-dl img { height: 32px; border-radius: 7px; }
+.games-section .game-card-dl img:hover { transform: scale(1.12) translateY(-1px); }
+
+/* QR Code hover 浮層（桌面），手機隱藏 */
+.games-section .game-card-qr {
+  position: absolute; inset: 0; z-index: 4;
+  background: rgba(8, 12, 20, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; padding: 12px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.games-section .game-card:hover .game-card-qr {
+  opacity: 1; pointer-events: auto;
+}
+.games-section .game-card-qr img {
+  width: 56%; max-width: 104px;
+  aspect-ratio: 1;
+  background: #fff; padding: 5px; border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.games-section .game-card-qr-text {
+  color: #fff; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.8px; white-space: nowrap;
+  padding: 4px 12px; border-radius: 999px;
+  background: rgba(240, 180, 41, 0.22);
+  border: 1px solid var(--accent);
+}
+[data-theme="light"] .games-section .game-card-qr {
+  background: rgba(255, 255, 255, 0.93);
+}
+[data-theme="light"] .games-section .game-card-qr-text {
+  color: var(--accent); background: rgba(200, 125, 26, 0.1);
+}
+
+/* Ticker 與 featured 視覺微調 */
+.ticker-strip { padding: 14px 0; }
+.ticker-item { font-size: 13.5px; }
+.featured-section .feat-panel.active { padding: 56px 28px 64px; gap: 48px; }
+.featured-section .feat-name { font-size: 32px; }
+.featured-section .feat-desc { font-size: 14.5px; line-height: 1.9; }
+
+/* feat-logo 隱藏（跟上方 quick-bar 視覺重複） */
+.featured-section .feat-logo { display: none; }
+
+/* 無手機版提示（大滿貫） */
+.featured-section .feat-pc-only {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  align-self: flex-start;
+}
+.games-section .game-card-dl .pc-only-tag {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px; border-radius: 6px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Quick-bar 點擊指示 + active 高亮（細框，inset 避免 overflow 切到） */
+.quick-bar-item { cursor: pointer; }
+.quick-bar-item.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  transform: none;
+}
+.quick-bar-item.active::before { opacity: 1; }
+/* 讓 quick-bar 有額外垂直留白，即使 overflow 也不會壓到 */
+.quick-bar { padding: 22px 0; }
+
+/* News「+MORE」改膠囊按鈕 */
+.news-section .news-more {
+  margin-top: 18px;
+  padding: 10px 22px;
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  background: var(--accent-dim);
+  font-weight: 700;
+  align-self: flex-start;
+}
+.news-section .news-more:hover {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+/* ── 3. News 區塊高度平衡 ── */
+.news-section { padding: 60px 0 56px; }
+.news-section .news-container { align-items: stretch; }
+.news-section .activities-sidebar { justify-content: space-between; gap: 12px; }
+.news-section .news-item { padding: 12px 16px; }
+.news-section .news-more { margin-top: 10px; }
+
+/* ── 4. Stats 區塊微優化：圖示更大、更有份量 ── */
+.stats-section { padding: 64px 0; }
+.stats-section .stat-icon {
+  width: 64px; height: 64px; font-size: 30px; border-radius: 18px;
+}
+.stats-section .stat-number { font-size: 34px; }
+.stats-section .stat-label { font-size: 14px; }
+
+/* ── 5. Section 標題更醒目 ── */
+.sec-title { font-size: 30px; }
+.sec-title::before, .sec-title::after { width: 56px; }
+.sec-subtitle { font-size: 14.5px; margin-top: 12px; }
+
+/* ── 6. Quick-bar 微放大 ── */
+.quick-bar { padding: 20px 0; }
+.quick-bar-item { padding: 12px 24px; }
+.quick-bar-item img { height: 42px; }
+
+/* ── 7. Footer 重新排版：5 欄平衡 + 底部 bar 整合 ── */
+.gt-footer { padding-top: 56px; }
+.gt-footer .footer-grid {
+  grid-template-columns: 1.7fr repeat(3, 1fr) 1.2fr;
+  gap: 40px; align-items: flex-start;
+  margin-bottom: 40px;
+}
+.gt-footer .footer-links { display: contents; }  /* 讓 3 個 col 成為 grid 直系子元素 */
+.gt-footer .footer-brand p { font-size: 13px; line-height: 1.85; }
+.gt-footer .footer-col h4 { margin-bottom: 14px; }
+.gt-footer .footer-col a { font-size: 13.5px; margin-bottom: 10px; }
+.gt-footer .footer-contact {
+  padding-left: 22px;
+  border-left: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.gt-footer .footer-contact .contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.gt-footer .footer-contact strong {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.gt-footer .footer-contact .contact-block a,
+.gt-footer .footer-contact .contact-block span {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  word-break: break-all;
+  transition: color 0.2s;
+}
+.gt-footer .footer-contact .contact-block a:hover {
+  color: var(--accent);
+}
+
+/* 底部列：© 左 / IGS 右，無多餘空隙 */
+.gt-footer .footer-bottom {
+  padding: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px; align-items: center;
+}
+.gt-footer .footer-bottom p {
+  margin: 0; font-size: 13px; line-height: 1.65;
+  color: var(--text-secondary); max-width: 780px;
+}
+.gt-footer .footer-bottom-igs img {
+  height: 58px;
+  transition: transform 0.3s ease;
+}
+.gt-footer .footer-bottom-igs img:hover {
+  transform: scale(1.04);
+}
+
+/* 法規聲明：與上方 bar 有清楚界線 */
+.gt-footer .footer-legal {
+  padding: 18px 0 28px;
+  border-top: 1px solid var(--border-subtle);
+}
+.gt-footer .footer-legal p {
+  font-size: 11.5px; line-height: 1.95;
+  color: var(--text-muted);
+  text-align: center; max-width: 100%; margin: 0;
+}
+
+/* ── 8. 深色模式：logo 白底增強可讀性（唯舞、IGS 等） ── */
+[data-theme="dark"] .quick-bar-item img,
+[data-theme="dark"] .game-card-logo img {
+  background: #fff;
+  box-shadow: 0 0 0 4px #fff;
+  border-radius: 5px;
+}
+[data-theme="dark"] .feat-logo img {
+  background: #fff;
+  box-shadow: 0 0 0 3px #fff;
+  border-radius: 4px;
+}
+[data-theme="dark"] .gt-footer .footer-bottom-igs img {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 4px 8px; border-radius: 6px;
+  box-sizing: content-box;
+}
+[data-theme="dark"] .gt-footer .footer-bottom-igs img:hover {
+  background: #fff;
+}
+
+/* ── 8. Hero 微調 ── */
+.carousel-section .carousel-slide img { height: 460px; }
+
+/* Carousel 手勢隔離：水平交給 JS 處理、垂直交還 browser（避免滑 banner 時頁面跟著抖動） */
+.carousel-section,
+.carousel-track,
+.carousel-slide { touch-action: pan-y; }
+
+/* 手機：停用 featured panel 淡入動畫（避免切換時 translateY 視覺抖動） */
+@media (max-width: 768px) {
+  .featured-section .feat-panel.active { animation: none; }
+  /* 手機：隱藏 carousel 左右箭頭（會擋到 slide 文字；swipe + dots + auto-rotate 已足夠） */
+  .carousel-btn { display: none; }
+}
+
+/* ── 9. RWD ── */
+@media (max-width: 1100px) {
+  .games-section .game-card { width: calc((100% - 40px) / 3); }
+  .sec-title { font-size: 26px; }
+  /* Footer 回歸堆疊 */
+  .gt-footer .footer-grid {
+    grid-template-columns: 1fr; gap: 32px;
+  }
+  .gt-footer .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .gt-footer .footer-contact {
+    padding-left: 0; border-left: none;
+    padding-top: 20px; border-top: 1px solid var(--border-subtle);
+  }
+}
+@media (max-width: 768px) {
+  .gt-footer .footer-bottom {
+    grid-template-columns: 1fr; gap: 14px;
+    text-align: center;
+  }
+  .gt-footer .footer-bottom-igs { justify-self: center; }
+}
+@media (max-width: 900px) {
+  .gt-header { padding: 0 20px; height: 72px; }
+  .carousel-section { margin-top: 72px; }
+}
+@media (max-width: 768px) {
+  .gt-header { height: 60px; padding: 0 16px; }
+  .gt-header .logo-link img { height: 36px; }
+  .carousel-section { margin-top: 60px; }
+  .games-section { padding: 48px 0 52px; }
+  .games-section .game-card { width: calc((100% - 12px) / 2); }
+  .news-section { padding: 44px 0; }
+  .stats-section { padding: 44px 0; }
+  .stats-section .stat-icon { width: 52px; height: 52px; font-size: 24px; }
+  .stats-section .stat-number { font-size: 26px; }
+  .sec-title { font-size: 22px; }
+  .sec-title::before, .sec-title::after { width: 32px; }
+  .quick-bar-item img { height: 36px; }
+  .quick-bar-item { padding: 8px 16px; }
+  .gt-footer { padding-top: 40px; }
+  .gt-footer .footer-legal p { padding: 0 4px; font-size: 11.5px; }
+  .carousel-section .carousel-slide img { height: 300px; }
+  .back-to-top { bottom: 20px; right: 16px; width: 42px; height: 42px; font-size: 17px; }
+}
+@media (max-width: 560px) {
+  /* 手機：featured panel 精簡 */
+  .featured-section .feat-panel.active {
+    padding: 28px 16px 36px; gap: 22px;
+  }
+  .featured-section .feat-name { font-size: 22px; }
+  .featured-section .feat-desc { font-size: 13px; line-height: 1.7; margin-bottom: 18px; }
+  .featured-section .feat-logo img { height: 38px; }
+  .featured-section .feat-type { font-size: 12px; margin-bottom: 14px; }
+  .featured-section .feat-art > img { border-radius: 14px; }
+  .featured-section .feat-badge { font-size: 11px; padding: 4px 12px; }
+  .featured-section .feat-qr { padding: 10px 14px; gap: 10px; }
+  .featured-section .feat-qr img { height: 62px; }
+  .featured-section .feat-qr-text { font-size: 11px; }
+  .featured-section .feat-pc-only { font-size: 11.5px; padding: 8px 12px; }
+
+  /* 手機：activities sidebar 從 3 張縱列 → 橫向捲動條，省 400px+ */
+  .news-section .activities-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .news-section .activity-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  /* 手機：quick-bar active 細描邊（不用 transform 避免被切） */
+  .quick-bar-item.active {
+    box-shadow: inset 0 0 0 1.5px var(--accent);
+  }
+
+  /* 手機：game card 改橫向列表式，大幅縮短頁面 */
+  .games-section { padding: 40px 0 44px; }
+  .games-section .game-grid { gap: 10px; }
+  .games-section .game-card {
+    width: 100%;
+    flex-direction: row;
+    align-items: stretch;
+    border-radius: 14px;
+  }
+  .games-section .game-card .game-card-thumb {
+    width: 36%; max-width: 130px; min-width: 110px;
+    flex: 0 0 auto;
+  }
+  .games-section .game-card .game-card-thumb img {
+    width: 100%; height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+  .games-section .game-card-flag {
+    top: 6px; right: 6px;
+    font-size: 9px; padding: 2px 7px;
+  }
+  .games-section .game-card .game-card-body {
+    flex: 1 1 auto;
+    padding: 10px 14px 12px;
+    display: flex; flex-direction: column;
+    gap: 4px;
+  }
+  .games-section .game-card-logo { margin-bottom: 2px; }
+  .games-section .game-card-logo img { height: 26px; }
+  .games-section .game-card-name {
+    font-size: 14.5px; font-weight: 700;
+    margin-bottom: 0;
+  }
+  .games-section .game-card-type {
+    font-size: 10px; padding: 2px 8px;
+    margin-bottom: 4px; align-self: flex-start;
+  }
+  .games-section .game-card-dl { gap: 4px; align-items: center; }
+  .games-section .game-card-dl img { height: 24px; }
+  .games-section .game-card-dl .pc-only-tag {
+    font-size: 9.5px; padding: 3px 7px;
+  }
+  .carousel-section .carousel-slide img { height: 220px; }
+  .sec-title { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="gt-header">
+  <a href="#" class="logo-link"><img src="圖片/logoGT_a1e54dda.png" alt="GameTower"></a>
+  <nav class="gt-nav">
+    <a href="#" class="nav-icon"><img src="圖片/menuMember_4dba1e23.png" alt="會員特區"></a>
+    <a href="#" class="nav-icon"><img src="圖片/menuPrize_dd5e2818.png" alt="領獎中心"></a>
+    <a href="#" class="nav-icon"><img src="圖片/menuShop_93d1dc77.png" alt="點數儲值"></a>
+    <a href="#" class="nav-icon"><img src="圖片/menuService_389546a1.png" alt="客服中心"></a>
+    <a href="#" class="nav-icon"><img src="圖片/menuLogIn_eeceee3c.png" alt="登入"></a>
+    <a href="#" class="nav-icon"><img src="圖片/menuSignUp_6ef94f61.png" alt="加入會員"></a>
+    <div class="theme-toggle" role="button" aria-label="切換主題">
+      <span class="icon-moon">🌙</span>
+      <span class="icon-sun">☀️</span>
+    </div>
+  </nav>
+  <div class="hamburger" aria-label="選單">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav-overlay">
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuMember_4dba1e23.png" alt=""></span>會員特區</a>
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuPrize_dd5e2818.png" alt=""></span>領獎中心</a>
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuShop_93d1dc77.png" alt=""></span>點數儲值</a>
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuService_389546a1.png" alt=""></span>客服中心</a>
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuLogIn_eeceee3c.png" alt=""></span>登入</a>
+  <a href="#" class="mob-item"><span class="mob-icon-wrap"><img src="圖片/menuSignUp_6ef94f61.png" alt=""></span>加入會員</a>
+</div>
+
+<!-- ═══════ HERO CAROUSEL ═══════ -->
+<section class="carousel-section">
+  <div class="carousel-track" id="carouselTrack">
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_slam888_94c65b1b.png" alt="大滿貫娛樂城">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">娛樂城</span>
+        <div class="slide-name">大滿貫娛樂城</div>
+        <div class="slide-tag">埃及法老主題 · 百款遊戲</div>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_TMD_176a6328.jpg" alt="滿貫大亨 Online">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">娛樂城</span>
+        <div class="slide-name">滿貫大亨 Online</div>
+        <div class="slide-tag">多款子遊戲 · 百億獎池</div>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_cmj2_44aee7c6.jpg" alt="競技麻將2">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">麻將競技</span>
+        <div class="slide-name">競技麻將2</div>
+        <div class="slide-tag">動漫風格 · 即時對戰</div>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_pg_4ca0e950.jpg" alt="玩星派對">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">休閒派對</span>
+        <div class="slide-name">玩星派對</div>
+        <div class="slide-tag">動漫校園風 · 免費送禮</div>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_we5_dc693207.jpg" alt="唯舞獨尊">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">音樂舞蹈</span>
+        <div class="slide-name">唯舞獨尊</div>
+        <div class="slide-tag">3D動漫 · 舞蹈第一品牌</div>
+      </div>
+    </div>
+    <div class="carousel-slide">
+      <img src="圖片/1920x450_star31.jpg" alt="明星3缺1">
+      <div class="slide-overlay"></div>
+      <div class="slide-info">
+        <span class="slide-cat">麻將休閒</span>
+        <div class="slide-name">明星3缺1</div>
+        <div class="slide-tag">台灣16張 · 明星陪你打</div>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-btn prev" id="carouselPrev" aria-label="上一張">❮</button>
+  <button class="carousel-btn next" id="carouselNext" aria-label="下一張">❯</button>
+  <div class="carousel-dots" id="carouselDots"></div>
+</section>
+
+<!-- ═══════ TICKER（最新消息跑馬燈） ═══════ -->
+<div class="ticker-strip">
+  <div class="ticker-track">
+    <span class="ticker-item">大滿貫娛樂城 全新上線</span>
+    <span class="ticker-item">滿貫大亨 Online 限時活動</span>
+    <span class="ticker-item">競技麻將2 錦標賽報名中</span>
+    <span class="ticker-item">玩星派對 天天免費送禮</span>
+    <span class="ticker-item">唯舞獨尊 新角色登場</span>
+    <span class="ticker-item">明星3缺1 新賽季開始</span>
+    <span class="ticker-item">大滿貫娛樂城 全新上線</span>
+    <span class="ticker-item">滿貫大亨 Online 限時活動</span>
+    <span class="ticker-item">競技麻將2 錦標賽報名中</span>
+    <span class="ticker-item">玩星派對 天天免費送禮</span>
+    <span class="ticker-item">唯舞獨尊 新角色登場</span>
+    <span class="ticker-item">明星3缺1 新賽季開始</span>
+  </div>
+</div>
+
+<!-- ═══════ GAME QUICK-ACCESS BAR ═══════ -->
+<div class="quick-bar">
+  <div class="wrap">
+    <div class="quick-bar-inner">
+      <a href="#feat" class="quick-bar-item" data-feat-idx="0"><img src="圖片/230x80_slam888_9e647d0c.png" alt="大滿貫娛樂城"></a>
+      <a href="#feat" class="quick-bar-item" data-feat-idx="1"><img src="圖片/230x80_TMD_fb2e5057.png" alt="滿貫大亨"></a>
+      <a href="#feat" class="quick-bar-item" data-feat-idx="2"><img src="圖片/230x80_cmj2_b02d0e42.png" alt="競技麻將2"></a>
+      <a href="#feat" class="quick-bar-item" data-feat-idx="3"><img src="圖片/230x80_pg_d848eb14.png" alt="玩星派對"></a>
+      <a href="#feat" class="quick-bar-item" data-feat-idx="4"><img src="圖片/230x80_WeDoApp_da5e8d8f.png" alt="唯舞獨尊"></a>
+      <a href="#feat" class="quick-bar-item" data-feat-idx="5"><img src="圖片/230x80_star31.png" alt="明星3缺1"></a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FEATURED GAME PANEL ═══════ -->
+<section class="featured-section" id="feat">
+  <div class="feat-panels">
+
+    <div class="feat-panel active" data-idx="0">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(200,150,42,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#c8962a,#f97316)">本月主打 · 娛樂城</span>
+        <img src="圖片/pic_slam888_f10ebe1e.png" alt="大滿貫娛樂城">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_slam888_9e647d0c.png" alt="大滿貫娛樂城"></div>
+        <div class="feat-name">大滿貫娛樂城</div>
+        <div class="feat-type" style="color:#f0b429">▸ 娛樂城 · 老虎機 · 百家樂 · 德州撲克</div>
+        <p class="feat-desc">化身埃及法老，進入充滿神秘與財富的娛樂城世界。百款精彩遊戲任君挑選，24小時不間斷客服，新會員加入即享豐厚禮包，每日簽到好禮不間斷。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-panel" data-idx="1">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(147,51,234,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#9333ea,#7c3aed)">多款子遊戲</span>
+        <img src="圖片/pic_TMD_32c76b1d.png" alt="滿貫大亨 Online">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_TMD_fb2e5057.png" alt="滿貫大亨"></div>
+        <div class="feat-name">滿貫大亨 Online</div>
+        <div class="feat-type" style="color:#a855f7">▸ 娛樂城平台 · 多款子遊戲 · 百億獎池</div>
+        <p class="feat-desc">跟著歡樂魔術師進入百億鑽石獎池！飛龍少女、獵龍戰紀、法老王等多款精彩老虎機，全在一個平台等你贏取大獎，精彩不間斷。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+          <img src="圖片/btnAndroid_1f6f169b.png" alt="Android版">
+          <img src="圖片/btnIOS_84b30e3b.png" alt="iOS版">
+        </div>
+        <div class="feat-qr">
+          <img src="圖片/AllinOne_QR_23204822.jpg" alt="QR">
+          <div class="feat-qr-text">掃描 QR Code<br>立即下載 APP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-panel" data-idx="2">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(220,38,38,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">即時對戰</span>
+        <img src="圖片/pic_cmj2_3f9f1e9e.png" alt="競技麻將2">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_cmj2_b02d0e42.png" alt="競技麻將2"></div>
+        <div class="feat-name">競技麻將2</div>
+        <div class="feat-type" style="color:#ef4444">▸ 麻將競技 · 即時對戰 · 錦標賽大獎</div>
+        <p class="feat-desc">全新動漫風格競技麻將，與全台玩家即時對戰！豐富的錦標賽制度，龍牌特效超爽快，展現你的麻將實力，贏取豐厚競賽大獎。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+          <img src="圖片/btnAndroid_1f6f169b.png" alt="Android版">
+          <img src="圖片/btnIOS_84b30e3b.png" alt="iOS版">
+        </div>
+        <div class="feat-qr">
+          <img src="圖片/qrcode_40064fc2.png" alt="QR">
+          <div class="feat-qr-text">掃描 QR Code<br>立即下載 APP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-panel" data-idx="3">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(8,145,178,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#0891b2,#0284c7)">免費送禮</span>
+        <img src="圖片/pic_pg_b9d34526.png" alt="玩星派對">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_pg_d848eb14.png" alt="玩星派對"></div>
+        <div class="feat-name">玩星派對</div>
+        <div class="feat-type" style="color:#22d3ee">▸ 休閒派對 · 動漫校園 · 天天送禮</div>
+        <p class="feat-desc">超可愛動漫角色的校園風格休閒遊戲！多款趣味小遊戲，天天免費送禮沒在怕，與好友同樂的最佳選擇，立即下載免費體驗。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+          <img src="圖片/btnAndroid_1f6f169b.png" alt="Android版">
+          <img src="圖片/btnIOS_84b30e3b.png" alt="iOS版">
+        </div>
+        <div class="feat-qr">
+          <img src="圖片/qrcode_a6574071.jpg" alt="QR">
+          <div class="feat-qr-text">掃描 QR Code<br>立即下載 APP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-panel" data-idx="4">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(219,39,119,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#db2777,#be185d)">舞蹈第一品牌</span>
+        <img src="圖片/pic_We5_119ce795.png" alt="唯舞獨尊">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_WeDoApp_da5e8d8f.png" alt="唯舞獨尊"></div>
+        <div class="feat-name">唯舞獨尊</div>
+        <div class="feat-type" style="color:#f472b6">▸ 音樂舞蹈 · 3D動漫 · We Dancing Online</div>
+        <p class="feat-desc">台灣最受歡迎的3D動漫舞蹈遊戲！豐富的角色造型、精彩的舞蹈曲目，與好友一起在舞台上發光發熱，展現你的舞蹈天賦。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+          <img src="圖片/btnAndroid_1f6f169b.png" alt="Android版">
+          <img src="圖片/btnIOS_84b30e3b.png" alt="iOS版">
+        </div>
+        <div class="feat-qr">
+          <img src="圖片/qrcode_4732f3fa.jpg" alt="QR">
+          <div class="feat-qr-text">掃描 QR Code<br>立即下載 APP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-panel" data-idx="5">
+      <div class="feat-art">
+        <div class="feat-art-glow" style="--feat-glow:rgba(16,185,129,.15)"></div>
+        <span class="feat-badge" style="background:linear-gradient(135deg,#059669,#10b981)">明星陪你打</span>
+        <img src="圖片/pic_iStar31_f9d3967f.png" alt="明星3缺1">
+      </div>
+      <div class="feat-info">
+        <div class="feat-logo"><img src="圖片/230x80_star31.png" alt="明星3缺1"></div>
+        <div class="feat-name">明星3缺1</div>
+        <div class="feat-type" style="color:#10b981">▸ 麻將休閒 · 台灣16張 · 明星陪玩</div>
+        <p class="feat-desc">最熱門的台灣麻將遊戲！超人氣明星陪你打牌陪你笑，台灣16張經典規則，多種桌型與玩法輕鬆上手，即時對戰感受麻將的熱血與歡樂。</p>
+        <div class="feat-dl">
+          <img src="圖片/btnPC_84f21eb1.png" alt="PC版">
+          <img src="圖片/btnAndroid_1f6f169b.png" alt="Android版">
+          <img src="圖片/btnIOS_84b30e3b.png" alt="iOS版">
+        </div>
+        <div class="feat-qr">
+          <img src="圖片/QRCode_371_9c36b778.gif" alt="QR">
+          <div class="feat-qr-text">掃描 QR Code<br>立即下載 APP</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════ ALL GAMES GRID ═══════ -->
+<section class="games-section" id="games">
+  <div class="wrap">
+    <div class="sec-header reveal">
+      <div class="sec-title">完整遊戲陣容</div>
+      <div class="sec-subtitle">Game Library · 7 款精彩遊戲</div>
+    </div>
+    <div class="game-grid">
+
+      <div class="game-card reveal">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_slam888_f10ebe1e.png" alt="大滿貫娛樂城">
+          <span class="game-card-flag flag-hot">HOT</span>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_slam888_9e647d0c.png" alt=""></div>
+          <div class="game-card-name">大滿貫娛樂城</div>
+          <span class="game-card-type">娛樂城</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-1">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_TMD_32c76b1d.png" alt="滿貫大亨 Online">
+          <div class="game-card-qr">
+            <img src="圖片/AllinOne_QR_23204822.jpg" alt="QR Code" loading="lazy">
+            <div class="game-card-qr-text">掃描下載 APP</div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_TMD_fb2e5057.png" alt=""></div>
+          <div class="game-card-name">滿貫大亨 Online</div>
+          <span class="game-card-type">娛樂城</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+            <img src="圖片/btnAndroid_1f6f169b.png" alt="Android">
+            <img src="圖片/btnIOS_84b30e3b.png" alt="iOS">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-2">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_cmj2_3f9f1e9e.png" alt="競技麻將2">
+          <div class="game-card-qr">
+            <img src="圖片/qrcode_40064fc2.png" alt="QR Code" loading="lazy">
+            <div class="game-card-qr-text">掃描下載 APP</div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_cmj2_b02d0e42.png" alt=""></div>
+          <div class="game-card-name">競技麻將2</div>
+          <span class="game-card-type">麻將競技</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+            <img src="圖片/btnAndroid_1f6f169b.png" alt="Android">
+            <img src="圖片/btnIOS_84b30e3b.png" alt="iOS">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-3">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_pg_b9d34526.png" alt="玩星派對">
+          <span class="game-card-flag flag-new">NEW</span>
+          <div class="game-card-qr">
+            <img src="圖片/qrcode_a6574071.jpg" alt="QR Code" loading="lazy">
+            <div class="game-card-qr-text">掃描下載 APP</div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_pg_d848eb14.png" alt=""></div>
+          <div class="game-card-name">玩星派對</div>
+          <span class="game-card-type">休閒派對</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+            <img src="圖片/btnAndroid_1f6f169b.png" alt="Android">
+            <img src="圖片/btnIOS_84b30e3b.png" alt="iOS">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-4">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_We5_119ce795.png" alt="唯舞獨尊">
+          <div class="game-card-qr">
+            <img src="圖片/qrcode_4732f3fa.jpg" alt="QR Code" loading="lazy">
+            <div class="game-card-qr-text">掃描下載 APP</div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_WeDoApp_da5e8d8f.png" alt=""></div>
+          <div class="game-card-name">唯舞獨尊</div>
+          <span class="game-card-type">音樂舞蹈</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+            <img src="圖片/btnAndroid_1f6f169b.png" alt="Android">
+            <img src="圖片/btnIOS_84b30e3b.png" alt="iOS">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-5">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_iStar31_f9d3967f.png" alt="明星3缺1">
+          <div class="game-card-qr">
+            <img src="圖片/QRCode_371_9c36b778.gif" alt="QR Code" loading="lazy">
+            <div class="game-card-qr-text">掃描下載 APP</div>
+          </div>
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-logo"><img src="圖片/230x80_star31.png" alt=""></div>
+          <div class="game-card-name">明星3缺1</div>
+          <span class="game-card-type">麻將休閒</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+            <img src="圖片/btnAndroid_1f6f169b.png" alt="Android">
+            <img src="圖片/btnIOS_84b30e3b.png" alt="iOS">
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card reveal delay-6">
+        <div class="game-card-thumb">
+          <img src="圖片/pic_slottrip777_a7b6d0d9.png" alt="幸運拉霸GO">
+        </div>
+        <div class="game-card-body">
+          <div class="game-card-name">幸運拉霸GO</div>
+          <span class="game-card-type">老虎機</span>
+          <div class="game-card-dl">
+            <img src="圖片/btnPC_84f21eb1.png" alt="PC">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ NEWS + ACTIVITIES ═══════ -->
+<section class="news-section" id="news">
+  <div class="wrap">
+    <div class="sec-header reveal">
+      <div class="sec-title">最新消息</div>
+      <div class="sec-subtitle">News &amp; Events</div>
+    </div>
+    <div class="news-container">
+      <div class="news-panel">
+        <div class="news-tabs">
+          <button class="news-tab active" data-cat="all">全部</button>
+          <button class="news-tab" data-cat="game">遊戲</button>
+          <button class="news-tab" data-cat="event">活動</button>
+          <button class="news-tab" data-cat="system">系統</button>
+        </div>
+        <div class="news-list">
+          <div class="news-item" data-cat="game">
+            <div class="news-item-left">
+              <span class="news-tag game">明星3缺1</span>
+              <span class="news-title">春季紅利商城全面開放</span>
+            </div>
+            <span class="news-date">2026-04-20</span>
+          </div>
+          <div class="news-item" data-cat="event">
+            <div class="news-item-left">
+              <span class="news-tag event">滿貫大亨</span>
+              <span class="news-title">儲iWIN 150點指定品項，抽黃金卡、iPad卡</span>
+            </div>
+            <span class="news-date">2026-04-19</span>
+          </div>
+          <div class="news-item" data-cat="game">
+            <div class="news-item-left">
+              <span class="news-tag game">唯舞獨尊</span>
+              <span class="news-title">04/16 經典唯舞還有這些活動喔</span>
+            </div>
+            <span class="news-date">2026-04-18</span>
+          </div>
+          <div class="news-item" data-cat="system">
+            <div class="news-item-left">
+              <span class="news-tag system">gametower</span>
+              <span class="news-title">2026年04月19日 01:00 維護公告</span>
+            </div>
+            <span class="news-date">2026-04-17</span>
+          </div>
+          <div class="news-item" data-cat="event">
+            <div class="news-item-left">
+              <span class="news-tag event">大滿貫</span>
+              <span class="news-title">新手禮包限時發放中，百款遊戲等你來</span>
+            </div>
+            <span class="news-date">2026-04-16</span>
+          </div>
+          <div class="news-item" data-cat="system">
+            <div class="news-item-left">
+              <span class="news-tag system">gametower</span>
+              <span class="news-title">稱號回收公告 — 接龍王者賽即將開打</span>
+            </div>
+            <span class="news-date">2026-04-15</span>
+          </div>
+          <div class="news-item" data-cat="game">
+            <div class="news-item-left">
+              <span class="news-tag game">競技麻將2</span>
+              <span class="news-title">龍牌錦標賽報名開始，獎金加倍</span>
+            </div>
+            <span class="news-date">2026-04-14</span>
+          </div>
+          <div class="news-item" data-cat="event">
+            <div class="news-item-left">
+              <span class="news-tag event">玩星派對</span>
+              <span class="news-title">天天簽到送鑽石，累計七天加碼特獎</span>
+            </div>
+            <span class="news-date">2026-04-13</span>
+          </div>
+        </div>
+        <a href="#" class="news-more">+MORE ›</a>
+      </div>
+      <div class="activities-sidebar">
+        <div class="activity-card reveal"><img src="圖片/375x140_21ad6c60.jpg" alt="活動橫幅"></div>
+        <div class="activity-card reveal delay-1"><img src="圖片/375x140_61eb318a.jpg" alt="活動橫幅"></div>
+        <div class="activity-card reveal delay-2"><img src="圖片/375X140_0bea3f2e.jpg" alt="活動橫幅"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ STATS / TRUST ═══════ -->
+<section class="stats-section">
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-icon">🎮</div>
+        <div class="stat-number" data-target="7">0</div>
+        <div class="stat-label">款精彩遊戲</div>
+      </div>
+      <div class="stat-card reveal delay-1">
+        <div class="stat-icon">👥</div>
+        <div class="stat-number" data-target="1000" data-suffix="萬+">0</div>
+        <div class="stat-label">全球註冊玩家</div>
+      </div>
+      <div class="stat-card reveal delay-2">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-number" data-target="15" data-suffix="+">0</div>
+        <div class="stat-label">年營運經驗</div>
+      </div>
+      <div class="stat-card reveal delay-3">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-number" data-target="24" data-suffix="/7">0</div>
+        <div class="stat-label">全天候系統服務</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="gt-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="圖片/Footer_GT_logo_13947028.png" alt="GameTower">
+        <p>GameTower 提供最優質的線上休閒遊戲體驗，致力於創造安全、公平、有趣的遊戲環境。</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>關於我們</h4>
+          <a href="#">公司介紹</a>
+          <a href="#">合作提案</a>
+          <a href="#">網站導覽</a>
+          <a href="#">聯絡我們</a>
+        </div>
+        <div class="footer-col">
+          <h4>服務條款</h4>
+          <a href="#">使用者合約</a>
+          <a href="#">隱私權保護</a>
+          <a href="#">網頁安全說明</a>
+          <a href="#">客戶問題回報</a>
+        </div>
+        <div class="footer-col">
+          <h4>遊戲專區</h4>
+          <a href="#">最新消息</a>
+          <a href="#">活動中心</a>
+          <a href="#">下載中心</a>
+          <a href="#">行動版官網</a>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <div class="contact-block">
+          <strong>客服信箱</strong>
+          <a href="mailto:service@support.gametower.com.tw">service@support.gametower.com.tw</a>
+        </div>
+        <div class="contact-block">
+          <strong>客服時間</strong>
+          <span>週一至週日 09:00 – 21:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 GameTower. All Rights Reserved. 本遊戲內容純屬虛擬，不涉及真實金錢賭博。</p>
+      <div class="footer-bottom-igs"><img src="圖片/IgS_718444fa.png" alt="IGS"></div>
+    </div>
+    <div class="footer-legal">
+      <p>
+        ※本遊戲為免費使用，遊戲內另提供購買虛擬遊戲幣、物品等付費服務。<br>
+        ※請注意遊戲時間，避免沉迷及不得為賭博、違反法令或類似之行為。<br>
+        ※本遊戲提供之機會中獎商品，消費者購買或參加活動不代表即可獲得特定商品。<br>
+        ※於平台上尊重包容多元性別及個體差異，避免使用有違社會善良風俗之言詞。
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" aria-label="回到頂部">↑</button>
+
+<script src="main.js"></script>
+<script>
+/* Layout A — 強制淺色主題（覆蓋 main.js 的 localStorage 預設） */
+document.documentElement.setAttribute('data-theme', 'light');
+try { localStorage.setItem('gt-theme', 'light'); } catch (e) {}
+
+/* Layout A — quick-bar → featured panel 連動 */
+document.addEventListener('DOMContentLoaded', () => {
+  document.documentElement.setAttribute('data-theme', 'light');
+  const items = document.querySelectorAll('.quick-bar-item[data-feat-idx]');
+  const dots = () => document.querySelectorAll('#carouselDots .dot');
+
+  function markActive(idx) {
+    items.forEach(el => el.classList.toggle('active',
+      Number(el.dataset.featIdx) === idx));
+    const activeItem = document.querySelector(`.quick-bar-item[data-feat-idx="${idx}"]`);
+    const container = document.querySelector('.quick-bar-inner');
+    if (!activeItem || !container) return;
+    // 容器沒有可捲動空間 → 不動
+    if (container.scrollWidth <= container.clientWidth + 1) return;
+    // Active 項目已在可視範圍內 → 不動（避免每次輪播都重新捲動造成「亂動」）
+    const itemLeft = activeItem.offsetLeft;
+    const itemRight = itemLeft + activeItem.offsetWidth;
+    const visLeft = container.scrollLeft;
+    const visRight = visLeft + container.clientWidth;
+    if (itemLeft >= visLeft && itemRight <= visRight) return;
+    // 僅在 active 項目超出可視範圍時才捲動置中
+    const target = itemLeft - (container.clientWidth / 2) + (activeItem.offsetWidth / 2);
+    container.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+  }
+
+  items.forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const idx = Number(el.dataset.featIdx);
+      const dot = dots()[idx];
+      if (dot) {
+        dot.click();         // idx 在 carousel 範圍內：觸發 main.js 的 goTo → 同步 carousel + featured
+      } else {
+        // idx 超出 carousel 範圍（例：明星3缺1 沒有 1920x450 banner）— 直接切換 featured panel
+        document.querySelectorAll('.feat-panel').forEach((p, i) =>
+          p.classList.toggle('active', i === idx));
+      }
+      markActive(idx);
+      const feat = document.getElementById('feat');
+      if (feat) feat.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // 初始 + 監聽 featured panel 變化同步 quick-bar active 狀態
+  const syncFromPanels = () => {
+    const active = document.querySelector('.feat-panel.active');
+    if (active) markActive(Number(active.dataset.idx));
+  };
+  syncFromPanels();
+  new MutationObserver(syncFromPanels).observe(
+    document.querySelector('.feat-panels') || document.body,
+    { subtree: true, attributes: true, attributeFilter: ['class'] }
+  );
+});
+</script>
+</body>
+</html>
