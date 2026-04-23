@@ -835,13 +835,4 @@ ul, ol { list-style: none; }
   .stat-card { padding: 24px 12px; }
   .stat-number { font-size: 24px; }
 }
-@media (max-width: 480px) {
-  .game-grid { grid-template-columns: 1fr; }
-  .carousel-slide img { height: 220px; }
-  .slide-info .slide-name { font-size: 22px; }
-  .sec-title { font-size: 22px; }
-  .sec-title::before, .sec-title::after { width: 24px; }
-  .footer-links { grid-template-columns: 1fr; }
-  .footer-bottom { flex-direction: column; text-align: center; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-}
+
