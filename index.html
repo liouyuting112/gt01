@@ -38,15 +38,16 @@ html, body {
 }
 
 /* ── 1. Header 放大：icon、logo、toggle ── */
-.gt-header { height: 76px; padding: 0 40px; }
-.gt-header .logo-link img { height: 46px; }
-.gt-nav { gap: 8px; }
+.gt-header { height: 72px !important; padding: 0 40px; }
+.gt-header .logo-link img { height: 44px !important; }
+.gt-nav { gap: 8px !important; }
 .gt-nav .nav-icon {
-  width: 68px; height: 38px;
+  width: 90px !important; height: 48px !important;
   border-radius: 10px;
 }
 .gt-nav .nav-icon img {
-  width: 68px; height: 76px;
+  width: 90px !important; height: 96px !important;
+  object-fit: cover !important;
 }
 .theme-toggle {
   width: 60px; height: 32px; margin-left: 14px; border-radius: 16px;
@@ -58,7 +59,7 @@ html, body {
 .theme-toggle .icon-moon { left: 8px; }
 .theme-toggle .icon-sun { right: 8px; }
 .theme-toggle .icon-moon, .theme-toggle .icon-sun { font-size: 14px; }
-.carousel-section { margin-top: 76px; }
+.carousel-section { margin-top: 72px; }
 
 /* ── 2. 遊戲卡片：全部等大 (4+3 居中對齊) ── */
 .games-section { padding: 72px 0; }
